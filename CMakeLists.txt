@@ -13,12 +13,16 @@ find_package(Qt5 COMPONENTS
         Widgets
         REQUIRED)
 
-add_executable(Solitaire2 main.cpp)
+add_executable(Solitaire2 main.cpp
+        resources.qrc)
+
 target_link_libraries(Solitaire2
         Qt5::Core
         Qt5::Gui
         Qt5::Widgets
 )
+
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/images DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/images)
 
 if (WIN32 AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
     set(DEBUG_SUFFIX)
