@@ -18,7 +18,7 @@ private:
     QGraphicsView* _view;
     QGraphicsScene* _scene;
     QList<Card*> _cards;
-    QList<Card*> _stacks;
+    QList<QList<Card*>> _stacks;
 };
 
 #endif //SOLITAIRE2_MAINWINDOW_H

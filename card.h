@@ -17,11 +17,16 @@ public:
     QRectF boundingRect() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
 
+public slots:
+    int stackNumber();
+    void setStackNumber(int stackNumber);
+
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 
 private:
     QGraphicsPixmapItem* _pixmapItem;
+    int _stackNumber;
 };
 
 #endif //SOLITAIRE2_CARD_H
