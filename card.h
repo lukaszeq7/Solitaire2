@@ -21,12 +21,16 @@ public slots:
     int stackNumber();
     void setStackNumber(int stackNumber);
 
+    int rowNumber();
+    void setRowNumber(int rowNumber);
+
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 
 private:
     QGraphicsPixmapItem* _pixmapItem;
     int _stackNumber;
+    int _rowNumber;
 };
 
 #endif //SOLITAIRE2_CARD_H

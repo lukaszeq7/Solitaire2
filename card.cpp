@@ -3,7 +3,8 @@
 Card::Card(QGraphicsItem* parent)
         : QGraphicsObject(parent),
         _pixmapItem(new QGraphicsPixmapItem(this)),
-        _stackNumber(-1)
+        _stackNumber(-1),
+        _rowNumber(-1)
 {
     QPixmap pixmap(":/images/h1.png");
     _pixmapItem->setPixmap(pixmap);
@@ -20,10 +21,11 @@ void Card::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton)
     {
-        qreal z = zValue();
-        qDebug() << "z:" << z;
+        qDebug() << "******************************";
+        qDebug() << "z:" << zValue();
         qDebug() << "pos:" << this->pos();
-        qDebug() << "stack number:" << this->stackNumber();
+        qDebug() << "stack number:" << stackNumber();
+        qDebug() << "row number:" << rowNumber();
     }
     QGraphicsObject::mousePressEvent(event);
 }
@@ -46,5 +48,16 @@ int Card::stackNumber()
 void Card::setStackNumber(int stackNumber)
 {
     _stackNumber = stackNumber;
+}
+
+int Card::rowNumber()
+{
+    return _rowNumber;
+}
+
+void Card::setRowNumber(int rowNumber)
+{
+    _rowNumber = rowNumber;
+    setZValue(rowNumber);
 }
 

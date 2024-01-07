@@ -26,14 +26,10 @@ MainWindow::MainWindow(QWidget *parent) :
             cardIndex++;
 
             card->setPos(-200 + column * 200, -100 + row * 70);
-            card->setZValue(row);
+            card->setRowNumber(row);
         }
         _stacks.append(stack);
     }
-    qDebug() << _stacks[0];
-    qDebug() << _stacks[1];
-    qDebug() << _stacks[2];
-
 
     _view->setScene(_scene);
     _view->setSceneRect(_cards[0]->boundingRect());
