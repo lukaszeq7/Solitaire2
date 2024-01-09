@@ -14,11 +14,16 @@ public:
 
     MainWindow::~MainWindow() override;
 
+public slots:
+    void onCardPressed(Card* cardPressed);
+    void onCardReleased(Card* cardReleased);
+
 private:
     QGraphicsView* _view;
     QGraphicsScene* _scene;
     QList<Card*> _cards;
     QList<QList<Card*>> _stacks;
+    QList<Card*> _selectedCards;
 };
 
 #endif //SOLITAIRE2_MAINWINDOW_H

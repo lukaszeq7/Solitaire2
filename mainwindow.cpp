@@ -20,6 +20,8 @@ MainWindow::MainWindow(QWidget *parent) :
         for(int row = 0; row < rowCount; row++)
         {
             Card* card = _cards[cardIndex];
+            connect(card, &Card::cardPressed, this, &MainWindow::onCardPressed);
+            connect(card, &Card::cardReleased, this, &MainWindow::onCardReleased);
             card->setStackNumber(column);
             stack.append(card);
             _scene->addItem(card);
@@ -39,4 +41,14 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     qDeleteAll(_cards);
+}
+
+void MainWindow::onCardPressed(Card* cardPressed)
+{
+
+}
+
+void MainWindow::onCardReleased(Card* cardReleased)
+{
+
 }

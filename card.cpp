@@ -19,15 +19,32 @@ Card::~Card()
 
 void Card::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (event->button() == Qt::LeftButton)
+    QList<QGraphicsItem*> itemsAtPosition = scene()->items(event->scenePos());
+    for(auto item : itemsAtPosition)
     {
-        qDebug() << "******************************";
-        qDebug() << "z:" << zValue();
-        qDebug() << "pos:" << this->pos();
-        qDebug() << "stack number:" << stackNumber();
-        qDebug() << "row number:" << rowNumber();
+        if(item->type() == Card::type())
+        {
+            Card* cardItem = dynamic_cast<Card*>(item);
+            qDebug() << cardItem->stackNumber();
+        }
     }
+
     QGraphicsObject::mousePressEvent(event);
+}
+
+void Card::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+    QList<QGraphicsItem*> itemsAtPosition = scene()->items(event->scenePos());
+    for(auto item : itemsAtPosition)
+    {
+        if(item->type() == Card::type())
+        {
+            Card* cardItem = dynamic_cast<Card*>(item);
+            qDebug() << cardItem->stackNumber();
+        }
+    }
+
+    QGraphicsItem::mouseReleaseEvent(event);
 }
 
 QRectF Card::boundingRect() const

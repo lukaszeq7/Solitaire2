@@ -4,6 +4,7 @@
 #include <QGraphicsObject>
 #include <QGraphicsSceneMouseEvent>
 #include <QDebug>
+#include <QGraphicsScene>
 
 class Card : public QGraphicsObject
 {
@@ -17,6 +18,10 @@ public:
     QRectF boundingRect() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
 
+signals:
+    void cardPressed(Card* cardPressed);
+    void cardReleased(Card* cardReleased);
+
 public slots:
     int stackNumber();
     void setStackNumber(int stackNumber);
@@ -26,11 +31,14 @@ public slots:
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 
 private:
     QGraphicsPixmapItem* _pixmapItem;
     int _stackNumber;
     int _rowNumber;
+    QPointF position;
+    bool isPressed;
 };
 
 #endif //SOLITAIRE2_CARD_H
