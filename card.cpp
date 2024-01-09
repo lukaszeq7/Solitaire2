@@ -1,12 +1,15 @@
 #include "card.h"
 
-Card::Card(QGraphicsItem* parent)
+Card::Card(QString color, int value, QGraphicsItem* parent)
         : QGraphicsObject(parent),
+        _color(color),
+        _value(value),
         _pixmapItem(new QGraphicsPixmapItem(this)),
         _stackNumber(-1),
         _rowNumber(-1)
 {
-    QPixmap pixmap(":/images/h1.png");
+    QString valueString = QString::number(_value);
+    QPixmap pixmap(":/images/" + _color + valueString + ".png");
     _pixmapItem->setPixmap(pixmap);
 
     setFlag(QGraphicsItem::ItemIsMovable);

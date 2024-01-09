@@ -5,9 +5,9 @@ MainWindow::MainWindow(QWidget *parent) :
         _view(new QGraphicsView(this)),
         _scene(new QGraphicsScene(this))
 {
-    for(int i = 0; i < 9; i++)
+    for(int i = 1; i <= 9; i++)
     {
-        Card* card = new Card();
+        Card* card = new Card("h", i);
         _cards.append(card);
     }
 

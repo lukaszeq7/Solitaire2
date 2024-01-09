@@ -11,7 +11,7 @@ class Card : public QGraphicsObject
 Q_OBJECT
 
 public:
-    explicit Card(QGraphicsItem* parent = nullptr);
+    explicit Card(QString color, int value, QGraphicsItem* parent = nullptr);
 
     Card::~Card() override;
 
@@ -35,10 +35,12 @@ protected:
 
 private:
     QGraphicsPixmapItem* _pixmapItem;
+
+    QString _color;
+    int _value;
+
     int _stackNumber;
     int _rowNumber;
-    QPointF position;
-    bool isPressed;
 };
 
 #endif //SOLITAIRE2_CARD_H
