@@ -1,5 +1,58 @@
 <!DOCTYPE RCC><RCC version="1.0">
     <qresource>
+        <file>images/c1.png</file>
+        <file>images/c2.png</file>
+        <file>images/c3.png</file>
+        <file>images/c4.png</file>
+        <file>images/c5.png</file>
+        <file>images/c6.png</file>
+        <file>images/c7.png</file>
+        <file>images/c8.png</file>
+        <file>images/c9.png</file>
+        <file>images/c10.png</file>
+        <file>images/c11.png</file>
+        <file>images/c12.png</file>
+        <file>images/c13.png</file>
+        <file>images/d1.png</file>
+        <file>images/d2.png</file>
+        <file>images/d3.png</file>
+        <file>images/d4.png</file>
+        <file>images/d5.png</file>
+        <file>images/d6.png</file>
+        <file>images/d7.png</file>
+        <file>images/d8.png</file>
+        <file>images/d9.png</file>
+        <file>images/d10.png</file>
+        <file>images/d11.png</file>
+        <file>images/d12.png</file>
+        <file>images/d13.png</file>
         <file>images/h1.png</file>
+        <file>images/h2.png</file>
+        <file>images/h3.png</file>
+        <file>images/h4.png</file>
+        <file>images/h5.png</file>
+        <file>images/h6.png</file>
+        <file>images/h7.png</file>
+        <file>images/h8.png</file>
+        <file>images/h9.png</file>
+        <file>images/h10.png</file>
+        <file>images/h11.png</file>
+        <file>images/h12.png</file>
+        <file>images/h13.png</file>
+        <file>images/s1.png</file>
+        <file>images/s2.png</file>
+        <file>images/s3.png</file>
+        <file>images/s4.png</file>
+        <file>images/s5.png</file>
+        <file>images/s6.png</file>
+        <file>images/s7.png</file>
+        <file>images/s8.png</file>
+        <file>images/s9.png</file>
+        <file>images/s10.png</file>
+        <file>images/s11.png</file>
+        <file>images/s12.png</file>
+        <file>images/s13.png</file>
+        <file>images/disabledCard.png</file>
+        <file>images/freeStack.png</file>
     </qresource>
 </RCC>
