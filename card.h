@@ -18,9 +18,15 @@ public:
     QRectF boundingRect() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
 
+    QString color();
+    int value();
+
+    QPointF position();
+    void setPosition(QPointF position);
+
 signals:
-    void cardPressed(Card* cardPressed);
-    void cardReleased(Card* cardReleased);
+    void cardPressed(QList<Card*> cardsPressed);
+    void cardReleased(QList<Card*> cardsReleased);
 
 public slots:
     int stackNumber();
@@ -41,6 +47,7 @@ private:
 
     int _stackNumber;
     int _rowNumber;
+    QPointF _position;
 };
 
 #endif //SOLITAIRE2_CARD_H

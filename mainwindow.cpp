@@ -23,19 +23,21 @@ MainWindow::MainWindow(QWidget *parent) :
             connect(card, &Card::cardPressed, this, &MainWindow::onCardPressed);
             connect(card, &Card::cardReleased, this, &MainWindow::onCardReleased);
             card->setStackNumber(column);
+            card->setPos(-200 + column * 200, -100 + row * 70);
+            card->setPosition(card->pos());
+            card->setRowNumber(row);
+
             stack.append(card);
             _scene->addItem(card);
-            cardIndex++;
 
-            card->setPos(-200 + column * 200, -100 + row * 70);
-            card->setRowNumber(row);
+            cardIndex++;
         }
         _stacks.append(stack);
     }
 
     _view->setScene(_scene);
     _view->setSceneRect(_cards[0]->boundingRect());
-    _view->setFixedSize(800, 600);
+    _view->setFixedSize(1200, 600);
 }
 
 MainWindow::~MainWindow()
@@ -43,12 +45,12 @@ MainWindow::~MainWindow()
     qDeleteAll(_cards);
 }
 
-void MainWindow::onCardPressed(Card* cardPressed)
+void MainWindow::onCardPressed(QList<Card*> cardsPressed)
 {
 
 }
 
-void MainWindow::onCardReleased(Card* cardReleased)
+void MainWindow::onCardReleased(QList<Card*> cardsPressed)
 {
 
 }

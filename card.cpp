@@ -22,30 +22,27 @@ Card::~Card()
 
 void Card::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    QList<QGraphicsItem*> itemsAtPosition = scene()->items(event->scenePos());
-    for(auto item : itemsAtPosition)
-    {
-        if(item->type() == Card::type())
-        {
-            Card* cardItem = dynamic_cast<Card*>(item);
-            qDebug() << cardItem->stackNumber();
-        }
-    }
-
     QGraphicsObject::mousePressEvent(event);
 }
 
 void Card::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    QList<QGraphicsItem*> itemsAtPosition = scene()->items(event->scenePos());
-    for(auto item : itemsAtPosition)
-    {
-        if(item->type() == Card::type())
-        {
-            Card* cardItem = dynamic_cast<Card*>(item);
-            qDebug() << cardItem->stackNumber();
-        }
-    }
+//    QList<QGraphicsItem*> itemsAtPosition = scene()->items(event->scenePos());
+//    for(QGraphicsItem* item : itemsAtPosition)
+//    {
+//        if(item->type() != Card::type())
+//        {
+//            itemsAtPosition.
+////            Card* cardItem = dynamic_cast<Card*>(item);
+////            cardItem->setPos(_position);
+//
+////            qDebug() << cardItem->color() << cardItem->value();
+//
+//        }
+//    }
+//    itemsAtPosition.takeLast()->setPos(_position);
+//    setPos(_position);
+    setPos(_position);
 
     QGraphicsItem::mouseReleaseEvent(event);
 }
@@ -81,3 +78,22 @@ void Card::setRowNumber(int rowNumber)
     setZValue(rowNumber);
 }
 
+QString Card::color()
+{
+    return _color;
+}
+
+int Card::value()
+{
+    return _value;
+}
+
+QPointF Card::position()
+{
+    return _position;
+}
+
+void Card::setPosition(QPointF position)
+{
+    _position = position;
+}
