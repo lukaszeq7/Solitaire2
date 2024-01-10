@@ -5,7 +5,7 @@ MainWindow::MainWindow(QWidget *parent) :
         _view(new QGraphicsView(this)),
         _scene(new QGraphicsScene(this))
 {
-    for(int i = 1; i <= 9; i++)
+    for(int i = 9; i >= 1; i--)
     {
         Card* card = new Card("h", i);
         _cards.append(card);
@@ -45,12 +45,15 @@ MainWindow::~MainWindow()
     qDeleteAll(_cards);
 }
 
-void MainWindow::onCardPressed(QList<Card*> cardsPressed)
+void MainWindow::onCardPressed(Card* cardPressed)
 {
-
+    qDebug() << "cardPressed" << cardPressed->color() << cardPressed->value();
 }
 
-void MainWindow::onCardReleased(QList<Card*> cardsPressed)
+void MainWindow::onCardReleased(QList<Card*> cardsReleased)
 {
-
+    for(Card* card : cardsReleased)
+    {
+        qDebug() << "cardReleased" << card->color() << card->value();
+    }
 }

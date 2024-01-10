@@ -15,7 +15,7 @@ public:
     MainWindow::~MainWindow() override;
 
 public slots:
-    void onCardPressed(QList<Card*> cardsPressed);
+    void onCardPressed(Card* cardPressed);
     void onCardReleased(QList<Card*> cardsPressed);
 
 private:

@@ -25,7 +25,7 @@ public:
     void setPosition(QPointF position);
 
 signals:
-    void cardPressed(QList<Card*> cardsPressed);
+    void cardPressed(Card* cardPressed);
     void cardReleased(QList<Card*> cardsReleased);
 
 public slots:

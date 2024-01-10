@@ -12,7 +12,7 @@ Card::Card(QString color, int value, QGraphicsItem* parent)
     QPixmap pixmap(":/images/" + _color + valueString + ".png");
     _pixmapItem->setPixmap(pixmap);
 
-    setFlag(QGraphicsItem::ItemIsMovable);
+    setFlag(QGraphicsObject::ItemIsMovable);
 }
 
 Card::~Card()
@@ -22,27 +22,23 @@ Card::~Card()
 
 void Card::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+    emit cardPressed(this);
     QGraphicsObject::mousePressEvent(event);
 }
 
 void Card::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-//    QList<QGraphicsItem*> itemsAtPosition = scene()->items(event->scenePos());
-//    for(QGraphicsItem* item : itemsAtPosition)
-//    {
-//        if(item->type() != Card::type())
-//        {
-//            itemsAtPosition.
-////            Card* cardItem = dynamic_cast<Card*>(item);
-////            cardItem->setPos(_position);
-//
-////            qDebug() << cardItem->color() << cardItem->value();
-//
-//        }
-//    }
-//    itemsAtPosition.takeLast()->setPos(_position);
-//    setPos(_position);
-    setPos(_position);
+    QList<Card*> cardsAtPosition;
+    QList<QGraphicsItem*> itemsAtPosition = scene()->items(event->scenePos());
+    for(QGraphicsItem* item : itemsAtPosition)
+    {
+        if(item->type() == Card::type())
+        {
+            Card* card = dynamic_cast<Card*>(item);
+            cardsAtPosition.append(card);
+        }
+    }
+    emit cardReleased(cardsAtPosition);
 
     QGraphicsItem::mouseReleaseEvent(event);
 }
