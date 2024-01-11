@@ -21,8 +21,11 @@ public:
     QString color();
     int value();
 
-    QPointF position();
-    void setPosition(QPointF position);
+    qreal xPosition();
+    qreal yPosition();
+    void setXposition(qreal x);
+    void setYposition(qreal y);
+    void setPosition(qreal x, qreal y);
 
 signals:
     void cardPressed(Card* cardPressed);
@@ -47,7 +50,8 @@ private:
 
     int _stackNumber;
     int _rowNumber;
-    QPointF _position;
+    qreal _xPosition;
+    qreal _yPosition;
 };
 
 #endif //SOLITAIRE2_CARD_H

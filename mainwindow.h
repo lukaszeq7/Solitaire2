@@ -24,6 +24,12 @@ private:
     QList<Card*> _cards;
     QList<QList<Card*>> _stacks;
     QList<Card*> _selectedCards;
+    QGraphicsItemGroup* _selectedCardsGroup;
+
+    const int _vSpace;
+    const int _hSpace;
+
+    QList<Card*> stackItemsToCards(qreal x);
 };
 
 #endif //SOLITAIRE2_MAINWINDOW_H

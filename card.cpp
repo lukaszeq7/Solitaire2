@@ -71,7 +71,7 @@ int Card::rowNumber()
 void Card::setRowNumber(int rowNumber)
 {
     _rowNumber = rowNumber;
-    setZValue(rowNumber);
+    setZValue(_rowNumber);
 }
 
 QString Card::color()
@@ -84,12 +84,31 @@ int Card::value()
     return _value;
 }
 
-QPointF Card::position()
+void Card::setPosition(qreal x, qreal y)
 {
-    return _position;
+    _xPosition = x;
+    _yPosition = y;
+    setPos(_xPosition, _yPosition);
 }
 
-void Card::setPosition(QPointF position)
+qreal Card::xPosition()
 {
-    _position = position;
+    return _xPosition;
+}
+
+qreal Card::yPosition()
+{
+    return _yPosition;
+}
+
+void Card::setXposition(qreal x)
+{
+    _xPosition = x;
+    setX(_xPosition);
+}
+
+void Card::setYposition(qreal y)
+{
+    _yPosition = y;
+    setY(_yPosition);
 }
