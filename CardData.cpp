@@ -1,6 +1,8 @@
 #include "CardData.h"
 
-CardData::CardData(const QString &color, int value)
+CardData::CardData(const QString &color, int value) :
+    _color(color),
+    _value(value)
 {
 
 }

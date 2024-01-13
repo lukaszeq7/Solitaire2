@@ -16,7 +16,14 @@ find_package(Qt5 COMPONENTS
 add_executable(Solitaire2 main.cpp
         resources.qrc
         CardData.cpp
-        CardData.h)
+        CardData.h
+        Card.cpp
+        Card.h
+        Board.cpp
+        Board.h
+        MainWindow.cpp
+        MainWindow.h
+)
 
 target_link_libraries(Solitaire2
         Qt5::Core
