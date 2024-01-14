@@ -7,7 +7,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     _view->setFixedSize(800, 600);
     _view->setScene(_board);
-//    _view->fitInView(_board->sceneRect(), Qt::IgnoreAspectRatio);
     _view->show();
 }
 

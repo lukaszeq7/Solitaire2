@@ -1,13 +1,17 @@
 #include "Board.h"
 
 Board::Board(QWidget *parent)
-        : QGraphicsScene(parent)
+        : QGraphicsScene(parent),
+        _sampleCard(new Card("h", 1)),
+        _hSpace(200),
+        _vSpace(60)
 {
-    setSceneRect(_card.boundingRect());
 
-    for(int i = 0; i < 9; i++)
+    setSceneRect(_sampleCard->boundingRect());
+
+    for(int i = 1; i <= 9; i++)
     {
-        Card* card = new Card();
+        Card* card = new Card("h", i);
         _cards.append(card);
         addItem(card);
     }
@@ -17,6 +21,7 @@ Board::Board(QWidget *parent)
 
 Board::~Board()
 {
+    delete _sampleCard;
     qDeleteAll(_cards);
 }
 
@@ -25,39 +30,29 @@ void Board::spreadCards()
     int cardIndex = 0;
     for(int i = 0; i < 3; i++)
     {
+        QList<Card*> stack;
         for(int j = 0; j < 3; j++)
         {
-            QList<Card*> stack;
             if (cardIndex < _cards.size())
             {
                 Card* card = _cards[cardIndex];
-//                _cardData->setStackNum(i);
-//                _cardData->setRowNum(j);
-                cardIndex++;
+                card->setStackNum(i);
+                card->setRowNum(j);
+                card->setZValue(j);
+                card->setPos(-200 + i * _hSpace, -100 + j * _vSpace);
 
                 stack.append(card);
+                cardIndex++;
             }
-            _stacks.append(stack);
+        }
+        _stacks.append(stack);
+    }
+
+    for(auto stack : _stacks)
+    {
+        for(Card* card : stack)
+        {
+            qDebug() << card->color() << card->value() << "stack:" << card->stackNum() << "row:" << card->rowNum();
         }
     }
-}
-
-void Board::setCardStackNum(int cardStackNum)
-{
-    _cardData->setStackNum(cardStackNum);
-}
-
-int Board::cardStackNum() const
-{
-    return _cardData->stackNum();
-}
-
-void Board::setCardRowNum(int cardRowNum)
-{
-    _cardData->setRowNum(cardRowNum);
-}
-
-int Board::cardRowNum() const
-{
-    return _cardData->rowNum();
 }

@@ -4,20 +4,34 @@
 #include <QGraphicsItem>
 #include <QPixmap>
 #include "CardData.h"
+#include <QDebug>
 
 class Card : public QGraphicsItem
 {
 public:
-    explicit Card(QGraphicsItem *parent = nullptr);
+    explicit Card(const QString& color, int value, QGraphicsItem *parent = nullptr);
 
     ~Card() override;
 
     virtual QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
+    QString color();
+    int value();
+
+    int stackNum() const;
+    void setStackNum(int stackNum);
+
+    int rowNum() const;
+    void setRowNum(int rowNum);
+
 private:
-    CardData* _cardData;
+    QString _color;
+    int _value;
     QGraphicsPixmapItem* _pixmapItem;
+
+    int _stackNum;
+    int _rowNum;
 };
 
 #endif //SOLITAIRE2_CARD_H

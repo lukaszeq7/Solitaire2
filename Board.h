@@ -14,17 +14,14 @@ public:
     explicit Board(QWidget *parent = nullptr);
     ~Board() override;
 
-    int cardRowNum() const;
-    void setCardRowNum(int cardRowNum);
-
-    int cardStackNum() const;
-    void setCardStackNum(int cardStackNum);
-
 private:
-    Card _card;
-    CardData* _cardData;
+    Card* _sampleCard;
+
     QList<Card*> _cards;
     QList<QList<Card*>> _stacks;
+
+    int _hSpace;
+    int _vSpace;
 
     void spreadCards();
 };
