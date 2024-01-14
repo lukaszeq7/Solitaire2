@@ -3,7 +3,6 @@
 
 #include <QGraphicsItem>
 #include <QPixmap>
-#include "CardData.h"
 #include <QDebug>
 
 class Card : public QGraphicsItem

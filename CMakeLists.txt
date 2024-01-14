@@ -15,8 +15,6 @@ find_package(Qt5 COMPONENTS
 
 add_executable(Solitaire2 main.cpp
         resources.qrc
-        CardData.cpp
-        CardData.h
         Card.cpp
         Card.h
         Board.cpp
