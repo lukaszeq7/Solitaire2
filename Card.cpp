@@ -16,7 +16,7 @@ Card::~Card()
 
 QRectF Card::boundingRect() const
 {
-    return QRectF();
+    return _pixmapItem->boundingRect();
 }
 
 void Card::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

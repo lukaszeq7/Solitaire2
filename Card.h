@@ -3,6 +3,7 @@
 
 #include <QGraphicsItem>
 #include <QPixmap>
+#include "CardData.h"
 
 class Card : public QGraphicsItem
 {
@@ -15,6 +16,7 @@ public:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
 private:
+    CardData* _cardData;
     QGraphicsPixmapItem* _pixmapItem;
 };
 

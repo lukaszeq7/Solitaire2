@@ -14,10 +14,19 @@ public:
     explicit Board(QWidget *parent = nullptr);
     ~Board() override;
 
-private:
-    Card* _card;
+    int cardRowNum() const;
+    void setCardRowNum(int cardRowNum);
 
-    void createAndAddCard();
+    int cardStackNum() const;
+    void setCardStackNum(int cardStackNum);
+
+private:
+    Card _card;
+    CardData* _cardData;
+    QList<Card*> _cards;
+    QList<QList<Card*>> _stacks;
+
+    void spreadCards();
 };
 
 #endif // SOLITAIRE2_BOARD_H

@@ -8,14 +8,20 @@ public:
     CardData(const QString& color, int value);
 
     QString color() const;
-    void setColor(const QString& color);
-
     int value() const;
-    void setValue(int value);
+
+    int stackNum() const;
+    void setStackNum(int stackNum);
+
+    int rowNum() const;
+    void setRowNum(int rowNum);
 
 private:
     QString _color;
     int _value;
+
+    int _stackNum;
+    int _rowNum;
 };
 
 #endif // CARDDATA_H

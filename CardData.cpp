@@ -12,17 +12,27 @@ QString CardData::color() const
     return _color;
 }
 
-void CardData::setColor(const QString &color)
-{
-    _color = color;
-}
-
 int CardData::value() const
 {
     return _value;
 }
 
-void CardData::setValue(int value)
+int CardData::stackNum() const
 {
-    _value = value;
+    return _stackNum;
+}
+
+void CardData::setStackNum(int stackNum)
+{
+    _stackNum = stackNum;
+}
+
+int CardData::rowNum() const
+{
+    return _rowNum;
+}
+
+void CardData::setRowNum(int rowNum)
+{
+    _rowNum = rowNum;
 }
