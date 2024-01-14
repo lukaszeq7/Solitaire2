@@ -3,17 +3,31 @@
 Board::Board(QWidget *parent)
         : QGraphicsScene(parent),
         _sampleCard(new Card("h", 1)),
-        _hSpace(200),
-        _vSpace(60)
+        _hSpace(120),
+        _vSpace(40)
 {
-
     setSceneRect(_sampleCard->boundingRect());
 
-    for(int i = 1; i <= 9; i++)
+    for (int i = 0; i < 2; i++)
     {
-        Card* card = new Card("h", i);
-        _cards.append(card);
-        addItem(card);
+        for(int value = 1; value <= 13; value++)
+        {
+            Card* card1 = new Card("h", value);
+            _cards.append(card1);
+            addItem(card1);
+
+            Card* card2 = new Card("d", value);
+            _cards.append(card2);
+            addItem(card2);
+
+             Card* card3 = new Card("s", value);
+            _cards.append(card3);
+            addItem(card3);
+
+            Card* card4 = new Card("c", value);
+            _cards.append(card4);
+            addItem(card4);
+        }
     }
 
     spreadCards();
@@ -28,18 +42,18 @@ Board::~Board()
 void Board::spreadCards()
 {
     int cardIndex = 0;
-    for(int i = 0; i < 3; i++)
+    for(int col = 0; col < 13; col++)
     {
         QList<Card*> stack;
-        for(int j = 0; j < 3; j++)
+        for(int row = 0; row < 8; row++)
         {
             if (cardIndex < _cards.size())
             {
                 Card* card = _cards[cardIndex];
-                card->setStackNum(i);
-                card->setRowNum(j);
-                card->setZValue(j);
-                card->setPos(-200 + i * _hSpace, -100 + j * _vSpace);
+                card->setStackNum(col);
+                card->setRowNum(row);
+                card->setZValue(row);
+                card->setPos(-700 + col * _hSpace, -100 + row * _vSpace);
 
                 stack.append(card);
                 cardIndex++;
