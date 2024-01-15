@@ -2,7 +2,9 @@
 #define SOLITAIRE2_CARD_H
 
 #include <QGraphicsItem>
+#include <QGraphicsSceneMouseEvent>
 #include <QPixmap>
+#include <QGraphicsScene>
 #include <QDebug>
 
 class Card : public QGraphicsItem
@@ -23,6 +25,12 @@ public:
 
     int rowNum() const;
     void setRowNum(int rowNum);
+
+    void setItemIsMovable(bool isMovable);
+
+protected:
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 
 private:
     QString _color;

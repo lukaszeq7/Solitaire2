@@ -10,7 +10,8 @@ Card::Card(const QString &color, int value, QGraphicsItem *parent) :
     QString imagePath(":/images/" + _color + valueStr + ".png");
     QPixmap pixmap(imagePath);
     _pixmapItem->setPixmap(pixmap);
-    _pixmapItem->setFlag(QGraphicsPixmapItem::ItemIsMovable);
+
+    setFlag(QGraphicsPixmapItem::ItemIsMovable);
 }
 
 Card::~Card()
@@ -54,4 +55,39 @@ int Card::rowNum() const
 void Card::setRowNum(int rowNum)
 {
     _rowNum = rowNum;
+}
+
+void Card::setItemIsMovable(bool isMovable)
+{
+    _pixmapItem->setFlag(QGraphicsPixmapItem::ItemIsMovable, isMovable);
+}
+
+void Card::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    qDebug() << _color << _value << "stack:" << _stackNum << "row:" << _rowNum;
+
+
+//    if (clickedCard) {
+//        // Tutaj możesz używać clickedCard jako obiektu typu Card
+//        qDebug() << clickedCard->_color << clickedCard->_value;
+//    }
+//    qDebug() << "card event&&&&&&&&&&&&&&&&&";
+//    QGraphicsItem* cardItem = scene()->itemAt(event->scenePos(), QTransform());
+//    qDebug() << cardItem->data(0);
+//    Card *card = dynamic_cast<Card*>(cardItem);
+//    if(card != nullptr)
+//    qDebug() << card->_color << _value;
+
+//    QList<QGraphicsItem*> itemsAtPosition = scene()->items(event->scenePos());
+//    for (QGraphicsItem* item : itemsAtPosition)
+//    {
+//        Card *cardItem = dynamic_cast<Card*>(item);
+////        qDebug() << cardItem->color() << cardItem->value() << "stack:" << cardItem->stackNum() << "row:" << cardItem->rowNum();
+//    }
+//    QGraphicsItem::mousePressEvent(event);
+}
+
+void Card::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+    QGraphicsItem::mouseReleaseEvent(event);
 }

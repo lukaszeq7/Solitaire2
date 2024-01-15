@@ -62,11 +62,11 @@ void Board::spreadCards()
         _stacks.append(stack);
     }
 
-    for(auto stack : _stacks)
-    {
-        for(Card* card : stack)
-        {
-            qDebug() << card->color() << card->value() << "stack:" << card->stackNum() << "row:" << card->rowNum();
-        }
-    }
+//    for(auto stack : _stacks)
+//    {
+//        for(Card* card : stack)
+//        {
+//            qDebug() << card->color() << card->value() << "stack:" << card->stackNum() << "row:" << card->rowNum();
+//        }
+//    }
 }
