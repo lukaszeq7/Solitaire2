@@ -27,6 +27,7 @@ private:
     int _hSpace;
     int _vSpace;
 
+    QList<Card*> _selectedCards;
     QGraphicsItemGroup* _cardGroup;
 
     void spreadCards();

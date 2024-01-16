@@ -2,8 +2,9 @@
 #define SOLITAIRE2_MAINWINDOW_H
 
 #include <QWidget>
+#include <QGraphicsScene>
 #include <QGraphicsView>
-#include "card.h"
+#include "Board.h"
 
 class MainWindow : public QWidget
 {
@@ -12,24 +13,11 @@ Q_OBJECT
 public:
     explicit MainWindow(QWidget *parent = nullptr);
 
-    MainWindow::~MainWindow() override;
-
-public slots:
-    void onCardPressed(Card* cardPressed);
-    void onCardReleased(QList<Card*> cardsPressed);
+    ~MainWindow() override;
 
 private:
+    Board* _board;
     QGraphicsView* _view;
-    QGraphicsScene* _scene;
-    QList<Card*> _cards;
-    QList<QList<Card*>> _stacks;
-    QList<Card*> _selectedCards;
-    QGraphicsItemGroup* _selectedCardsGroup;
-
-    const int _vSpace;
-    const int _hSpace;
-
-    QList<Card*> stackItemsToCards(qreal x);
 };
 
 #endif //SOLITAIRE2_MAINWINDOW_H

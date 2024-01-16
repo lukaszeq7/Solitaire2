@@ -84,7 +84,7 @@ void Card::mousePressEvent(QGraphicsSceneMouseEvent *event)
 //        Card *cardItem = dynamic_cast<Card*>(item);
 ////        qDebug() << cardItem->color() << cardItem->value() << "stack:" << cardItem->stackNum() << "row:" << cardItem->rowNum();
 //    }
-//    QGraphicsItem::mousePressEvent(event);
+    QGraphicsItem::mousePressEvent(event);
 }
 
 void Card::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)

@@ -1,57 +1,46 @@
 #ifndef SOLITAIRE2_CARD_H
 #define SOLITAIRE2_CARD_H
 
-#include <QGraphicsObject>
+#include <QGraphicsItem>
 #include <QGraphicsSceneMouseEvent>
-#include <QDebug>
+#include <QPixmap>
 #include <QGraphicsScene>
+#include <QDebug>
 
-class Card : public QGraphicsObject
+class Card : public QGraphicsItem
 {
-Q_OBJECT
-
 public:
-    explicit Card(QString color, int value, QGraphicsItem* parent = nullptr);
+    explicit Card(const QString& color, int value, QGraphicsItem *parent = nullptr);
 
-    Card::~Card() override;
+    ~Card() override;
 
-    QRectF boundingRect() const override;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
+    virtual QRectF boundingRect() const;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
     QString color();
     int value();
 
-    qreal xPosition();
-    qreal yPosition();
-    void setXposition(qreal x);
-    void setYposition(qreal y);
-    void setPosition(qreal x, qreal y);
+    int stackNum() const;
+    void setStackNum(int stackNum);
 
-signals:
-    void cardPressed(Card* cardPressed);
-    void cardReleased(QList<Card*> cardsReleased);
+    int rowNum() const;
+    void setRowNum(int rowNum);
 
-public slots:
-    int stackNumber();
-    void setStackNumber(int stackNumber);
+    void setItemIsMovable(bool isMovable);
 
-    int rowNumber();
-    void setRowNumber(int rowNumber);
+    int type();
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 
 private:
-    QGraphicsPixmapItem* _pixmapItem;
-
     QString _color;
     int _value;
+    QGraphicsPixmapItem* _pixmapItem;
 
-    int _stackNumber;
-    int _rowNumber;
-    qreal _xPosition;
-    qreal _yPosition;
+    int _stackNum;
+    int _rowNum;
 };
 
 #endif //SOLITAIRE2_CARD_H
