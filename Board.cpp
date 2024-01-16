@@ -73,6 +73,7 @@ void Board::spreadCards()
 
 void Board::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+    _cardGroup = new QGraphicsItemGroup();
     QList<Card*> cardsAtPosition;
     QList<QGraphicsItem*> itemsAtPosition = items(event->scenePos());
 
@@ -83,13 +84,16 @@ void Board::mousePressEvent(QGraphicsSceneMouseEvent *event)
             if(item->type() == _sampleCard->type())
             {
                 Card* card = dynamic_cast<Card*>(item);
+                card->setFlag(QGraphicsItem::ItemIsMovable);
+                _cardGroup->addToGroup(card);
                 cardsAtPosition.append(card);
             }
         }
-
         qDebug() << "pressed" << cardsAtPosition[0]->color() << cardsAtPosition[0]->value() <<
                  cardsAtPosition[0]->stackNum() << cardsAtPosition[0]->rowNum();
     }
+    addItem(_cardGroup);
+    _cardGroup->setFlag(QGraphicsItemGroup::ItemIsMovable);
 
     QGraphicsScene::mousePressEvent(event);
 }
@@ -115,6 +119,7 @@ void Board::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
             qDebug() << "released" << card->color() << card->value() << card->stackNum() << card->rowNum();
         }
     }
+    destroyItemGroup(_cardGroup);
 
     QGraphicsScene::mouseReleaseEvent(event);
 }

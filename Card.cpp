@@ -11,7 +11,7 @@ Card::Card(const QString &color, int value, QGraphicsItem *parent) :
     QPixmap pixmap(imagePath);
     _pixmapItem->setPixmap(pixmap);
 
-    setFlag(QGraphicsPixmapItem::ItemIsMovable);
+//    setFlag(QGraphicsPixmapItem::ItemIsMovable);
 }
 
 Card::~Card()

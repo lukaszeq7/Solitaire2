@@ -27,6 +27,8 @@ private:
     int _hSpace;
     int _vSpace;
 
+    QGraphicsItemGroup* _cardGroup;
+
     void spreadCards();
 };
 
