@@ -28,6 +28,8 @@ public:
 
     void setItemIsMovable(bool isMovable);
 
+    int type();
+
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;

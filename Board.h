@@ -14,6 +14,10 @@ public:
     explicit Board(QWidget *parent = nullptr);
     ~Board() override;
 
+protected:
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
+
 private:
     Card* _sampleCard;
 

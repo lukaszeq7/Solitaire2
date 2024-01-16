@@ -64,7 +64,7 @@ void Card::setItemIsMovable(bool isMovable)
 
 void Card::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    qDebug() << _color << _value << "stack:" << _stackNum << "row:" << _rowNum;
+//    qDebug() << _color << _value << "stack:" << _stackNum << "row:" << _rowNum;
 
 
 //    if (clickedCard) {
@@ -90,4 +90,9 @@ void Card::mousePressEvent(QGraphicsSceneMouseEvent *event)
 void Card::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     QGraphicsItem::mouseReleaseEvent(event);
+}
+
+int Card::type()
+{
+    return 65536;
 }

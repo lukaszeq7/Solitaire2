@@ -70,3 +70,51 @@ void Board::spreadCards()
 //        }
 //    }
 }
+
+void Board::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    QList<Card*> cardsAtPosition;
+    QList<QGraphicsItem*> itemsAtPosition = items(event->scenePos());
+
+    if(!itemsAtPosition.isEmpty())
+    {
+        for(auto item : itemsAtPosition)
+        {
+            if(item->type() == _sampleCard->type())
+            {
+                Card* card = dynamic_cast<Card*>(item);
+                cardsAtPosition.append(card);
+            }
+        }
+
+        qDebug() << "pressed" << cardsAtPosition[0]->color() << cardsAtPosition[0]->value() <<
+                 cardsAtPosition[0]->stackNum() << cardsAtPosition[0]->rowNum();
+    }
+
+    QGraphicsScene::mousePressEvent(event);
+}
+
+void Board::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+    QList<Card*> cardsAtPosition;
+    QList<QGraphicsItem*> itemsAtPosition = items(event->scenePos());
+
+    if(!itemsAtPosition.isEmpty())
+    {
+        for(auto item : itemsAtPosition)
+        {
+            if(item->type() == _sampleCard->type())
+            {
+                Card* card = dynamic_cast<Card*>(item);
+                cardsAtPosition.append(card);
+            }
+        }
+
+        for (auto card : cardsAtPosition)
+        {
+            qDebug() << "released" << card->color() << card->value() << card->stackNum() << card->rowNum();
+        }
+    }
+
+    QGraphicsScene::mouseReleaseEvent(event);
+}
