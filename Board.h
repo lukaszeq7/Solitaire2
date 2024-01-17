@@ -26,6 +26,11 @@ private:
 
     int _hSpace;
     int _vSpace;
+    int _srcStackNum;
+    int _srcRowNum;
+    int _srcZNum;
+    int _destStackNum;
+
 
     QList<Card*> _selectedCards;
     QGraphicsItemGroup* _cardGroup;

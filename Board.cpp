@@ -8,7 +8,7 @@ Board::Board(QWidget *parent)
 {
     setSceneRect(_sampleCard->boundingRect());
 
-    for (int i = 0; i < 2; i++)
+    for (int i = 0; i < 1; i++)
     {
         for(int value = 1; value <= 13; value++)
         {
@@ -45,7 +45,7 @@ void Board::spreadCards()
     for(int col = 0; col < 13; col++)
     {
         QList<Card*> stack;
-        for(int row = 0; row < 8; row++)
+        for(int row = 0; row < 4; row++)
         {
             if (cardIndex < _cards.size())
             {
@@ -73,7 +73,7 @@ void Board::spreadCards()
 
 void Board::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    int stackNum = -1;
+//    int stackNum = -1;
     int rowNum = -1;
     _cardGroup = new QGraphicsItemGroup();
     QList<Card*> cardsAtPosition;
@@ -81,69 +81,114 @@ void Board::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
     if(!itemsAtPosition.isEmpty())
     {
+        int z = 200;
         for(auto item : itemsAtPosition)
         {
             if(item->type() == _sampleCard->type())
             {
                 Card* card = dynamic_cast<Card*>(item);
-
-//                break;
-//                card->setFlag(QGraphicsItem::ItemIsMovable);
-//                _cardGroup->addToGroup(card);
                 cardsAtPosition.append(card);
             }
         }
-        stackNum = cardsAtPosition[0]->stackNum();
+        _srcStackNum = cardsAtPosition[0]->stackNum();
         rowNum = cardsAtPosition[0]->rowNum();
-        qDebug() << stackNum << rowNum;
 
 
-        for (int i = rowNum; i < _stacks[stackNum].count(); i++)
+        for (int i = rowNum; i < _stacks[_srcStackNum].count(); i++)
         {
-            Card* card = _stacks[stackNum][i];
-//            card->setFlag(QGraphicsItem::ItemIsMovable);
+            Card* card = _stacks[_srcStackNum][i];
+            card->setZValue(200 + i);
             _cardGroup->addToGroup(card);
-//            _selectedCards.append(card);
+            _selectedCards.append(card);
         }
         addItem(_cardGroup);
         _cardGroup->setFlag(QGraphicsItemGroup::ItemIsMovable);
-
+        _cardGroup->setZValue(200);
         for(Card* card : _selectedCards)
         {
-            qDebug() << card->color() << card->value() << "stack:" << card->stackNum() << "row:" << card->rowNum();
+            qDebug() << "selected cards" << card->color() << card->value() << "stack:" << card->stackNum() << "row:" << card->rowNum() << card->zValue();
         }
     }
-
-
-
-//    _cardGroup->setFlag(QGraphicsItemGroup::ItemIsMovable);
 
     QGraphicsScene::mousePressEvent(event);
 }
 
 void Board::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    QList<Card*> cardsAtPosition;
-    QList<QGraphicsItem*> itemsAtPosition = items(event->scenePos());
+    destroyItemGroup(_cardGroup);
 
-    if(!itemsAtPosition.isEmpty())
+    if(!_selectedCards.isEmpty())
     {
-        for(auto item : itemsAtPosition)
+        int rowNum = -1;
+        QList<Card *> cardsAtPosition;
+        QList<QGraphicsItem *> itemsAtPosition = items(event->scenePos());
+
+        if(itemsAtPosition.count() > 1)
         {
-            if(item->type() == _sampleCard->type())
+
+                for (auto item: itemsAtPosition)
+                {
+                    if (item->type() == _sampleCard->type())
+                    {
+                        Card *card = dynamic_cast<Card *>(item);
+                        cardsAtPosition.append(card);
+                        qDebug() << "cardatposition release" << card->color() << card->value() << card->zValue();
+                    }
+                }//TODO here, if there is 1 card drop to scene, app crashes, length == 1
+                //set card source pos, and data
+                _destStackNum = cardsAtPosition[1]->stackNum();
+                rowNum = cardsAtPosition[1]->rowNum();
+                qDebug() << "released" << _destStackNum << rowNum;
+
+            int lastCardNum = _stacks[_destStackNum].count() - 1;
+            Card *lastCard = _stacks[_destStackNum][lastCardNum];
+            for (int i = 0; i < _selectedCards.count(); i++)
             {
-                Card* card = dynamic_cast<Card*>(item);
-                cardsAtPosition.append(card);
+                Card *card = _selectedCards[i];
+                card->setX(lastCard->x());
+                card->setY(lastCard->y() + _vSpace + i * _vSpace);
+                card->setZValue(lastCard->zValue() + i + 1);
+
+            }
+
+            //update stacks data
+
+            for (int i = 0; i < _selectedCards.count(); i++)
+            {
+                _stacks[_srcStackNum].removeLast();
+            }
+
+            int newRowIndex = _stacks[_destStackNum].count();
+            for (int i = 0; i < _selectedCards.count(); i++)
+            {
+                _selectedCards[i]->setStackNum(_destStackNum);
+                _selectedCards[i]->setRowNum(newRowIndex + i);
+
+                _stacks[_destStackNum].append(_selectedCards[i]);
+
+            }
+
+            for (Card *card: _stacks[_srcStackNum])
+            {
+                qDebug() << "SRCstack" << card->color() << card->value() << "stack:" << card->stackNum() << "row:"
+                         << card->rowNum();
+
+            }
+
+            for (Card *card: _stacks[_destStackNum])
+            {
+                qDebug() << "DESTstack" << card->color() << card->value() << "stack:" << card->stackNum() << "row:"
+                         << card->rowNum();
+
             }
         }
 
-//        for (auto card : cardsAtPosition)
-//        {
-//            qDebug() << "released" << card->color() << card->value() << card->stackNum() << card->rowNum();
-//        }
+
+        _srcStackNum = -1;
+        _destStackNum = -1;
+        _selectedCards.clear();
+
     }
-    _selectedCards.clear();
-    destroyItemGroup(_cardGroup);
 
     QGraphicsScene::mouseReleaseEvent(event);
 }
