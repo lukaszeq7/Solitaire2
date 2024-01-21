@@ -2,7 +2,6 @@
 #define SOLITAIRE2_CARD_H
 
 #include <QGraphicsItem>
-#include <QGraphicsSceneMouseEvent>
 #include <QPixmap>
 #include <QGraphicsScene>
 #include <QDebug>
@@ -22,17 +21,10 @@ public:
 
     int stackNum() const;
     void setStackNum(int stackNum);
-
     int rowNum() const;
     void setRowNum(int rowNum);
 
-    void setItemIsMovable(bool isMovable);
-
     int type();
-
-protected:
-    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 
 private:
     QString _color;
