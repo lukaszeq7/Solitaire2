@@ -171,7 +171,7 @@ bool Board::isSelectedCardsMovable()
     for(int i = lastCardIndex; i > 0; i--)
     {
         Card* card = _selectedCards[i - 1];
-        if(card->value() == _sampleCard->value() + 1)
+        if(card->value() == _sampleCard->value() + 1 && card->color() == _sampleCard->color())
         {
             _sampleCard = card;
         }
@@ -261,7 +261,7 @@ bool Board::isSelectedCardsPositionable()
 {
     Card* lastStackCard = _stacks[_destCardStackNum].last();
     Card* firstSelectedCard = _selectedCards.first();
-    if(lastStackCard->value() == firstSelectedCard->value() + 1)
+    if(lastStackCard->value() == firstSelectedCard->value() + 1 && lastStackCard->color() == firstSelectedCard->color())
     {
         return true;
     }
