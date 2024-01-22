@@ -51,6 +51,9 @@ private:
     void updateCardsData(int stackNum);
 
     void showCardsData(const QList<Card*>& cardList, const QString& text);
+
+    bool isCardsInOrder(Card* firstCard, Card* secondCard);
+    bool isSameColor(Card* firstCard, Card* secondCard);
 };
 
 #endif // SOLITAIRE2_BOARD_H

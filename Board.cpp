@@ -125,21 +125,21 @@ void Board::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
             {
                 _destCardStackNum = clickedCard(itemsAtPosition, 1)->stackNum();
 
-                if(!isSelectedCardsPositionable())
-                {
-                    setCardsOnPositions(_selectedCards, _srcCardStackNum);
-                    appendCardsToStack(_selectedCards, _srcCardStackNum);
-                    updateCardsData(_srcCardStackNum);
-
-                    showCardsData(_stacks[_srcCardStackNum], "DESTsrc:");
-                }
-                else
+                if(isSelectedCardsPositionable())
                 {
                     setCardsOnPositions(_selectedCards, _destCardStackNum);
                     appendCardsToStack(_selectedCards, _destCardStackNum);
                     updateCardsData(_destCardStackNum);
 
                     showCardsData(_stacks[_destCardStackNum], "DEST:");
+                }
+                else
+                {
+                    setCardsOnPositions(_selectedCards, _srcCardStackNum);
+                    appendCardsToStack(_selectedCards, _srcCardStackNum);
+                    updateCardsData(_srcCardStackNum);
+
+                    showCardsData(_stacks[_srcCardStackNum], "DESTsrc:");
                 }
             }
             _selectedCards.clear();
@@ -171,7 +171,7 @@ bool Board::isSelectedCardsMovable()
     for(int i = lastCardIndex; i > 0; i--)
     {
         Card* card = _selectedCards[i - 1];
-        if(card->value() == _sampleCard->value() + 1 && card->color() == _sampleCard->color())
+        if(isCardsInOrder(card, _sampleCard) && isSameColor(card, _sampleCard))
         {
             _sampleCard = card;
         }
@@ -261,7 +261,7 @@ bool Board::isSelectedCardsPositionable()
 {
     Card* lastStackCard = _stacks[_destCardStackNum].last();
     Card* firstSelectedCard = _selectedCards.first();
-    if(lastStackCard->value() == firstSelectedCard->value() + 1 && lastStackCard->color() == firstSelectedCard->color())
+    if(isCardsInOrder(lastStackCard, firstSelectedCard) && isSameColor(lastStackCard, firstSelectedCard))
     {
         return true;
     }
@@ -269,4 +269,14 @@ bool Board::isSelectedCardsPositionable()
     {
         return false;
     }
+}
+
+bool Board::isCardsInOrder(Card *firstCard, Card *secondCard)
+{
+    return firstCard->value() == secondCard->value() + 1;
+}
+
+bool Board::isSameColor(Card *firstCard, Card *secondCard)
+{
+    return firstCard->color() == secondCard->color();
 }
