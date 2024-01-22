@@ -40,6 +40,7 @@ private:
 
     Card* clickedCard(const QList<QGraphicsItem*>& itemsAtPosition, int cardIndex);
     bool isSelectedCardsMovable();
+    bool isSelectedCardsPositionable();
     QList<Card*> selectedCards(int stackNum, int rowNum);
 
     void addCardsToGroup(const QList<Card*>& selectedCards);

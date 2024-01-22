@@ -124,11 +124,23 @@ void Board::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
             else
             {
                 _destCardStackNum = clickedCard(itemsAtPosition, 1)->stackNum();
-                setCardsOnPositions(_selectedCards, _destCardStackNum);
-                appendCardsToStack(_selectedCards, _destCardStackNum);
-                updateCardsData(_destCardStackNum);
 
-                showCardsData(_stacks[_destCardStackNum], "DEST:");
+                if(!isSelectedCardsPositionable())
+                {
+                    setCardsOnPositions(_selectedCards, _srcCardStackNum);
+                    appendCardsToStack(_selectedCards, _srcCardStackNum);
+                    updateCardsData(_srcCardStackNum);
+
+                    showCardsData(_stacks[_srcCardStackNum], "DESTsrc:");
+                }
+                else
+                {
+                    setCardsOnPositions(_selectedCards, _destCardStackNum);
+                    appendCardsToStack(_selectedCards, _destCardStackNum);
+                    updateCardsData(_destCardStackNum);
+
+                    showCardsData(_stacks[_destCardStackNum], "DEST:");
+                }
             }
             _selectedCards.clear();
         }
@@ -242,5 +254,19 @@ void Board::showCardsData(const QList<Card *>& cardList, const QString& text)
     for(Card* card : cardList)
     {
         qDebug() << text << card->color() << card->value() << "stack:" << card->stackNum() << "row:" << card->rowNum() << "z:" << card->zValue();
+    }
+}
+
+bool Board::isSelectedCardsPositionable()
+{
+    Card* lastStackCard = _stacks[_destCardStackNum].last();
+    Card* firstSelectedCard = _selectedCards.first();
+    if(lastStackCard->value() == firstSelectedCard->value() + 1)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
     }
 }
