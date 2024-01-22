@@ -79,16 +79,25 @@ void Board::mousePressEvent(QGraphicsSceneMouseEvent *event)
         {
             _srcCardStackNum = clickedCard(itemsAtPosition, 0)->stackNum();
             _srcCardRowNum = clickedCard(itemsAtPosition, 0)->rowNum();
+
             _selectedCards = selectedCards(_srcCardStackNum, _srcCardRowNum);
+            if(!isSelectedCardsMovable())
+            {
+                _selectedCards.clear();
+                updateCardsData(_srcCardStackNum);
+                return;
+            }
+            else
+            {
+                _cardGroup = new QGraphicsItemGroup();
+                addCardsToGroup(_selectedCards);
 
-            _cardGroup = new QGraphicsItemGroup();
-            addCardsToGroup(_selectedCards);
+                removeCardsFromStack(_selectedCards, _srcCardStackNum);
+                updateCardsData(_srcCardStackNum);
 
-            removeCardsFromStack(_selectedCards, _srcCardStackNum);
-            updateCardsData(_srcCardStackNum);
-
-            showCardsData(_selectedCards, "selected:");
-            showCardsData(_stacks[_srcCardStackNum], "SRC:");
+                showCardsData(_selectedCards, "selected:");
+                showCardsData(_stacks[_srcCardStackNum], "SRC:");
+            }
         }
     }
 
@@ -115,11 +124,23 @@ void Board::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
             else
             {
                 _destCardStackNum = clickedCard(itemsAtPosition, 1)->stackNum();
-                setCardsOnPositions(_selectedCards, _destCardStackNum);
-                appendCardsToStack(_selectedCards, _destCardStackNum);
-                updateCardsData(_destCardStackNum);
 
-                showCardsData(_stacks[_destCardStackNum], "DEST:");
+                if(!isSelectedCardsPositionable())
+                {
+                    setCardsOnPositions(_selectedCards, _srcCardStackNum);
+                    appendCardsToStack(_selectedCards, _srcCardStackNum);
+                    updateCardsData(_srcCardStackNum);
+
+                    showCardsData(_stacks[_srcCardStackNum], "DESTsrc:");
+                }
+                else
+                {
+                    setCardsOnPositions(_selectedCards, _destCardStackNum);
+                    appendCardsToStack(_selectedCards, _destCardStackNum);
+                    updateCardsData(_destCardStackNum);
+
+                    showCardsData(_stacks[_destCardStackNum], "DEST:");
+                }
             }
             _selectedCards.clear();
         }
@@ -140,6 +161,26 @@ Card *Board::clickedCard(const QList<QGraphicsItem *>& itemsAtPosition, int card
         }
     }
     return cardsAtPosition[cardIndex];
+}
+
+bool Board::isSelectedCardsMovable()
+{
+    int lastCardIndex = _selectedCards.count() - 1;
+    _sampleCard = _selectedCards[lastCardIndex];
+
+    for(int i = lastCardIndex; i > 0; i--)
+    {
+        Card* card = _selectedCards[i - 1];
+        if(card->value() == _sampleCard->value() + 1 && card->color() == _sampleCard->color())
+        {
+            _sampleCard = card;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    return true;
 }
 
 QList<Card *> Board::selectedCards(int stackNum, int rowNum)
@@ -196,6 +237,7 @@ void Board::updateCardsData(int stackNum)
         Card* card = _stacks[stackNum][i];
         card->setStackNum(stackNum);
         card->setRowNum(i);
+        card->setZValue(i);
     }
 }
 
@@ -212,5 +254,19 @@ void Board::showCardsData(const QList<Card *>& cardList, const QString& text)
     for(Card* card : cardList)
     {
         qDebug() << text << card->color() << card->value() << "stack:" << card->stackNum() << "row:" << card->rowNum() << "z:" << card->zValue();
+    }
+}
+
+bool Board::isSelectedCardsPositionable()
+{
+    Card* lastStackCard = _stacks[_destCardStackNum].last();
+    Card* firstSelectedCard = _selectedCards.first();
+    if(lastStackCard->value() == firstSelectedCard->value() + 1 && lastStackCard->color() == firstSelectedCard->color())
+    {
+        return true;
+    }
+    else
+    {
+        return false;
     }
 }
