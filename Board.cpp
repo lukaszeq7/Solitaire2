@@ -79,16 +79,25 @@ void Board::mousePressEvent(QGraphicsSceneMouseEvent *event)
         {
             _srcCardStackNum = clickedCard(itemsAtPosition, 0)->stackNum();
             _srcCardRowNum = clickedCard(itemsAtPosition, 0)->rowNum();
+
             _selectedCards = selectedCards(_srcCardStackNum, _srcCardRowNum);
+            if(!isSelectedCardsMovable())
+            {
+                _selectedCards.clear();
+                updateCardsData(_srcCardStackNum);
+                return;
+            }
+            else
+            {
+                _cardGroup = new QGraphicsItemGroup();
+                addCardsToGroup(_selectedCards);
 
-            _cardGroup = new QGraphicsItemGroup();
-            addCardsToGroup(_selectedCards);
+                removeCardsFromStack(_selectedCards, _srcCardStackNum);
+                updateCardsData(_srcCardStackNum);
 
-            removeCardsFromStack(_selectedCards, _srcCardStackNum);
-            updateCardsData(_srcCardStackNum);
-
-            showCardsData(_selectedCards, "selected:");
-            showCardsData(_stacks[_srcCardStackNum], "SRC:");
+                showCardsData(_selectedCards, "selected:");
+                showCardsData(_stacks[_srcCardStackNum], "SRC:");
+            }
         }
     }
 
@@ -140,6 +149,26 @@ Card *Board::clickedCard(const QList<QGraphicsItem *>& itemsAtPosition, int card
         }
     }
     return cardsAtPosition[cardIndex];
+}
+
+bool Board::isSelectedCardsMovable()
+{
+    int lastCardIndex = _selectedCards.count() - 1;
+    _sampleCard = _selectedCards[lastCardIndex];
+
+    for(int i = lastCardIndex; i > 0; i--)
+    {
+        Card* card = _selectedCards[i - 1];
+        if(card->value() == _sampleCard->value() + 1)
+        {
+            _sampleCard = card;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    return true;
 }
 
 QList<Card *> Board::selectedCards(int stackNum, int rowNum)
@@ -196,6 +225,7 @@ void Board::updateCardsData(int stackNum)
         Card* card = _stacks[stackNum][i];
         card->setStackNum(stackNum);
         card->setRowNum(i);
+        card->setZValue(i);
     }
 }
 
