@@ -165,15 +165,14 @@ Card *Board::clickedCard(const QList<QGraphicsItem *>& itemsAtPosition, int card
 
 bool Board::isSelectedCardsMovable()
 {
-    int lastCardIndex = _selectedCards.count() - 1;
-    _sampleCard = _selectedCards[lastCardIndex];
+    Card* previousCard = _selectedCards[0];
 
-    for(int i = lastCardIndex; i > 0; i--)
+    for(int i = 1; i < _selectedCards.count(); i++)
     {
-        Card* card = _selectedCards[i - 1];
-        if(isCardsInOrder(card, _sampleCard) && isSameColor(card, _sampleCard))
+        Card* card = _selectedCards[i];
+        if(isCardsInOrder(previousCard, card) && isSameColor(previousCard, card))
         {
-            _sampleCard = card;
+            previousCard = card;
         }
         else
         {
