@@ -79,25 +79,9 @@ void Board::mousePressEvent(QGraphicsSceneMouseEvent *event)
         {
             _srcCardStackNum = clickedCard(itemsAtPosition, 0)->stackNum();
             _srcCardRowNum = clickedCard(itemsAtPosition, 0)->rowNum();
-
             _selectedCards = selectedCards(_srcCardStackNum, _srcCardRowNum);
-            if(!isSelectedCardsMovable())
-            {
-                _selectedCards.clear();
-                updateCardsData(_srcCardStackNum);
-                return;
-            }
-            else
-            {
-                _cardGroup = new QGraphicsItemGroup();
-                addCardsToGroup(_selectedCards);
 
-                removeCardsFromStack(_selectedCards, _srcCardStackNum);
-                updateCardsData(_srcCardStackNum);
-
-                showCardsData(_selectedCards, "selected:");
-                showCardsData(_stacks[_srcCardStackNum], "SRC:");
-            }
+            pickUpTheCards(_selectedCards, _srcCardStackNum);
         }
     }
 
@@ -115,31 +99,18 @@ void Board::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
             QList<QGraphicsItem *> itemsAtPosition = items(event->scenePos());
             if(itemsAtPosition.count() <= 2)
             {
-                setCardsOnPositions(_selectedCards, _srcCardStackNum);
-                appendCardsToStack(_selectedCards, _srcCardStackNum);
-                updateCardsData(_srcCardStackNum);
-
-                showCardsData(_stacks[_srcCardStackNum], "DESTsrc:");
+                layDownTheCards(_selectedCards, _srcCardStackNum);
             }
             else
             {
                 _destCardStackNum = clickedCard(itemsAtPosition, 1)->stackNum();
-
                 if(isSelectedCardsPositionable())
                 {
-                    setCardsOnPositions(_selectedCards, _destCardStackNum);
-                    appendCardsToStack(_selectedCards, _destCardStackNum);
-                    updateCardsData(_destCardStackNum);
-
-                    showCardsData(_stacks[_destCardStackNum], "DEST:");
+                    layDownTheCards(_selectedCards, _destCardStackNum);
                 }
                 else
                 {
-                    setCardsOnPositions(_selectedCards, _srcCardStackNum);
-                    appendCardsToStack(_selectedCards, _srcCardStackNum);
-                    updateCardsData(_srcCardStackNum);
-
-                    showCardsData(_stacks[_srcCardStackNum], "DESTsrc:");
+                    layDownTheCards(_selectedCards, _srcCardStackNum);
                 }
             }
             _selectedCards.clear();
@@ -278,4 +249,29 @@ bool Board::isCardsInOrder(Card *firstCard, Card *secondCard)
 bool Board::isSameColor(Card *firstCard, Card *secondCard)
 {
     return firstCard->color() == secondCard->color();
+}
+
+void Board::pickUpTheCards(QList<Card*>& selectedCards, int stackNum)
+{
+    if(!isSelectedCardsMovable())
+    {
+        selectedCards.clear();
+        updateCardsData(stackNum);
+        return;
+    }
+    else
+    {
+        _cardGroup = new QGraphicsItemGroup();
+        addCardsToGroup(selectedCards);
+
+        removeCardsFromStack(selectedCards, stackNum);
+        updateCardsData(stackNum);
+    }
+}
+
+void Board::layDownTheCards(const QList<Card *> &selectedCards, int stackNum)
+{
+    setCardsOnPositions(selectedCards, stackNum);
+    appendCardsToStack(selectedCards, stackNum);
+    updateCardsData(stackNum);
 }

@@ -54,6 +54,9 @@ private:
 
     bool isCardsInOrder(Card* firstCard, Card* secondCard);
     bool isSameColor(Card* firstCard, Card* secondCard);
+
+    void pickUpTheCards(QList<Card*>& selectedCards, int stackNum);
+    void layDownTheCards(const QList<Card*>& selectedCards, int stackNum);
 };
 
 #endif // SOLITAIRE2_BOARD_H
