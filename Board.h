@@ -39,7 +39,7 @@ private:
     void spreadCards();
 
     Card* clickedCard(const QList<QGraphicsItem*>& itemsAtPosition, int cardIndex);
-    bool isSelectedCardsMovable();
+    bool isSelectedCardsMoveable();
     bool isSelectedCardsPositionable();
     QList<Card*> selectedCards(int stackNum, int rowNum);
 
@@ -57,6 +57,15 @@ private:
 
     void pickUpTheCards(QList<Card*>& selectedCards, int stackNum);
     void layDownTheCards(const QList<Card*>& selectedCards, int stackNum);
+
+    void collectCardsIfInOrder(int stackNum);
+
+
+    bool isCardsRemoveable(int stackNum);
+
+    void collectCards(int stackNum);
+
+    void setupBoard();
 };
 
 #endif // SOLITAIRE2_BOARD_H

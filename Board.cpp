@@ -7,7 +7,7 @@ Board::Board(QWidget *parent)
           _hSpace(120),
           _vSpace(40)
 {
-    setSceneRect(_sampleCard->boundingRect());
+    setupBoard();
 
     initCards(_numberOfDecksOfCards);
     spreadCards();
@@ -107,6 +107,7 @@ void Board::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
                 if(isSelectedCardsPositionable())
                 {
                     layDownTheCards(_selectedCards, _destCardStackNum);
+                    collectCardsIfInOrder(_destCardStackNum);
                 }
                 else
                 {
@@ -134,7 +135,7 @@ Card *Board::clickedCard(const QList<QGraphicsItem *>& itemsAtPosition, int card
     return cardsAtPosition[cardIndex];
 }
 
-bool Board::isSelectedCardsMovable()
+bool Board::isSelectedCardsMoveable()
 {
     Card* previousCard = _selectedCards[0];
 
@@ -253,7 +254,7 @@ bool Board::isSameColor(Card *firstCard, Card *secondCard)
 
 void Board::pickUpTheCards(QList<Card*>& selectedCards, int stackNum)
 {
-    if(!isSelectedCardsMovable())
+    if(!isSelectedCardsMoveable())
     {
         selectedCards.clear();
         updateCardsData(stackNum);
@@ -274,4 +275,53 @@ void Board::layDownTheCards(const QList<Card *> &selectedCards, int stackNum)
     setCardsOnPositions(selectedCards, stackNum);
     appendCardsToStack(selectedCards, stackNum);
     updateCardsData(stackNum);
+}
+
+void Board::collectCardsIfInOrder(int stackNum)
+{
+    if(isCardsRemoveable(stackNum))
+    {
+        collectCards(stackNum);
+    }
+}
+
+bool Board::isCardsRemoveable(int stackNum)
+{
+    int stackSize = _stacks[stackNum].count();
+    int orderCounter = 1;
+    Card* previousCard = _stacks[stackNum].last();
+    for(int i = stackSize - 2; i >= stackSize - 3; i--)
+    {
+        Card* card = _stacks[stackNum][i];
+        if(isCardsInOrder(card, previousCard) && isSameColor(card, previousCard)/* && value =1* i */)
+        {
+            previousCard = card;
+            orderCounter++;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+void Board::collectCards(int stackNum)
+{
+    int row = _stacks[stackNum].count() - 1;
+    int i = 0;
+    while(i < 3)
+    {
+        _stacks[stackNum][row]->hide();
+        _stacks[stackNum].removeAt(row);
+
+        row--;
+        i++;
+    }
+    updateCardsData(stackNum);
+}
+
+void Board::setupBoard()
+{
+    setSceneRect(_sampleCard->boundingRect());
 }
