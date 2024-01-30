@@ -10,7 +10,7 @@ class Card : public QGraphicsItem
 {
 public:
     explicit Card(const QString& color, int value, QGraphicsItem *parent = nullptr);
-
+    explicit Card(const QString& color,QGraphicsItem *parent = nullptr);
     ~Card() override;
 
     virtual QRectF boundingRect() const;

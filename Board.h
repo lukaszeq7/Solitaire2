@@ -3,6 +3,7 @@
 
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
+#include <QGraphicsPixmapItem>
 #include <QWidget>
 #include <QDebug>
 #include "Card.h"
@@ -23,6 +24,7 @@ private:
     const int _numberOfDecksOfCards;
     Card* _sampleCard;
 
+    QList<Card*> _freeStackCards;
     QList<Card*> _cards;
     QList<QList<Card*>> _stacks;
 

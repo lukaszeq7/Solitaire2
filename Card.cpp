@@ -12,6 +12,16 @@ Card::Card(const QString &color, int value, QGraphicsItem *parent) :
     _pixmapItem->setPixmap(pixmap);
 }
 
+Card::Card(const QString &color, QGraphicsItem *parent) :
+        QGraphicsItem(parent),
+        _color(color),
+        _pixmapItem(new QGraphicsPixmapItem(this))
+{
+    QString imagePath(":/images/" + _color + ".png");
+    QPixmap pixmap(imagePath);
+    _pixmapItem->setPixmap(pixmap);
+}
+
 Card::~Card()
 {
 }
