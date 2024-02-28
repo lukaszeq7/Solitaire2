@@ -40,9 +40,10 @@ private:
     void initCards(int numberOfDecksDfCards);
     void spreadCards();
 
+    QList<Card*> getCardsAtPosition(const QList<QGraphicsItem*>& itemsAtPosition);
     Card* clickedCard(const QList<QGraphicsItem*>& itemsAtPosition, int cardIndex);
     bool isSelectedCardsMoveable();
-    bool isSelectedCardsPositionable();
+    bool isSelectedCardsPositionable(bool isReleaseOnFreeStack);
     QList<Card*> selectedCards(int stackNum, int rowNum);
 
     void addCardsToGroup(const QList<Card*>& selectedCards);
