@@ -93,7 +93,8 @@ void Board::mousePressEvent(QGraphicsSceneMouseEvent *event)
     if(event->button() == Qt::LeftButton)
     {
         QList<QGraphicsItem*> itemsAtPosition = items(event->scenePos());
-        if(!itemsAtPosition.isEmpty())
+        QList<Card*> cardsUnderMouse = getCardsAtPosition(itemsAtPosition);
+        if(!cardsUnderMouse.isEmpty())
         {
             if(clickedCard(itemsAtPosition, 0)->color() == "freeStack")
             {
@@ -120,17 +121,24 @@ void Board::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
             destroyItemGroup(_cardGroup);
 
             QList<QGraphicsItem *> itemsAtPosition = items(event->scenePos());
-            if(itemsAtPosition.count() <= 2)
+            QList<Card*> cardsUnderMouse = getCardsAtPosition(itemsAtPosition);
+            _destCardStackNum = cardsUnderMouse.last()->stackNum();
+            bool isReleasedOnFreeStack = false;
+            if(cardsUnderMouse.count() == 2 && cardsUnderMouse.last()->color() == "freeStack")
+            {
+                isReleasedOnFreeStack = true;
+            }
+
+            if(cardsUnderMouse.count() <= 1)
             {
                 layDownTheCards(_selectedCards, _srcCardStackNum);
             }
             else
             {
-                _destCardStackNum = clickedCard(itemsAtPosition, 1)->stackNum();
-                if(isSelectedCardsPositionable())
+                if(isSelectedCardsPositionable(isReleasedOnFreeStack))
                 {
                     layDownTheCards(_selectedCards, _destCardStackNum);
-//                    collectCardsIfInOrder(_destCardStackNum);
+                    collectCardsIfInOrder(_destCardStackNum);
                 }
                 else
                 {
@@ -142,6 +150,20 @@ void Board::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     }
 
     QGraphicsScene::mouseReleaseEvent(event);
+}
+
+QList<Card *> Board::getCardsAtPosition(const QList<QGraphicsItem *>& itemsAtPosition)
+{
+    QList<Card*> cardsAtPosition;
+    for(QGraphicsItem* item : itemsAtPosition)
+    {
+        if(item->type() == _sampleCard->type())
+        {
+            Card* card = dynamic_cast<Card*>(item);
+            cardsAtPosition.append(card);
+        }
+    }
+    return cardsAtPosition;
 }
 
 Card *Board::clickedCard(const QList<QGraphicsItem *>& itemsAtPosition, int cardIndex)
@@ -264,8 +286,13 @@ void Board::showCardsData(const QList<Card *>& cardList, const QString& text)
     }
 }
 
-bool Board::isSelectedCardsPositionable()
+bool Board::isSelectedCardsPositionable(bool isReleaseOnFreeStack)
 {
+    if(isReleaseOnFreeStack)
+    {
+        return true;
+    }
+
     Card* lastStackCard = _stacks[_destCardStackNum].last();
     Card* firstSelectedCard = _selectedCards.first();
     if(isCardsInOrder(lastStackCard, firstSelectedCard) && isSameColor(lastStackCard, firstSelectedCard))
@@ -324,12 +351,19 @@ void Board::collectCardsIfInOrder(int stackNum)
 bool Board::isCardsRemoveable(int stackNum)
 {
     int stackSize = _stacks[stackNum].count();
+    if(_stacks[stackNum].last()->value() != 1 || stackSize < 13)
+    {
+        return false;
+    }
+
     int orderCounter = 1;
     Card* previousCard = _stacks[stackNum].last();
-    for(int i = stackSize - 2; i >= stackSize - 3; i--)
+
+    while(orderCounter < 13)
     {
+        int i = stackSize - orderCounter - 1;
         Card* card = _stacks[stackNum][i];
-        if(isCardsInOrder(card, previousCard) && isSameColor(card, previousCard))
+        if(isCardsInOrder(card, previousCard))
         {
             previousCard = card;
             orderCounter++;
@@ -346,7 +380,7 @@ void Board::collectCards(int stackNum)
 {
     int row = _stacks[stackNum].count() - 1;
     int i = 0;
-    while(i < 3)
+    while(i < 13)
     {
         _stacks[stackNum][row]->hide();
         _stacks[stackNum].removeAt(row);
@@ -360,8 +394,6 @@ void Board::collectCards(int stackNum)
 void Board::setupBoard()
 {
     setSceneRect(_sampleCard->boundingRect());
-//
-//    Card* freeStackCard = new Card();
-//    this.
-//    _freeStackCards.append(freeStackCard);
 }
+
+
