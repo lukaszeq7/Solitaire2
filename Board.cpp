@@ -204,7 +204,7 @@ bool Board::isSelectedCardsPositionable(bool isReleaseOnFreeStack)
 
     Card* lastStackCard = _stacks[_destCardStackNum].last();
     Card* firstSelectedCard = _selectedCards.first();
-    if(isCardsInOrder(lastStackCard, firstSelectedCard) && isSameColor(lastStackCard, firstSelectedCard))
+    if(isCardsInOrder(lastStackCard, firstSelectedCard))
     {
         return true;
     }
