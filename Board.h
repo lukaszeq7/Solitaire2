@@ -22,6 +22,7 @@ protected:
 
 private:
     const int _numberOfDecksOfCards;
+    const int _numberOfFullCardsPerColor;
     Card* _sampleCard;
 
     QList<Card*> _freeStackCards;
@@ -37,38 +38,33 @@ private:
     QList<Card*> _selectedCards;
     QGraphicsItemGroup* _cardGroup;
 
+    void setupBoard();
     void initCards(int numberOfDecksDfCards);
     void spreadCards();
+    void shuffleCards();
 
-    QList<Card*> getCardsAtPosition(const QList<QGraphicsItem*>& itemsAtPosition);
-    Card* clickedCard(const QList<QGraphicsItem*>& itemsAtPosition, int cardIndex);
-    bool isSelectedCardsMoveable();
-    bool isSelectedCardsPositionable(bool isReleaseOnFreeStack);
+    QList<Card*> cardsAtPosition(const QList<QGraphicsItem*>& itemsAtPosition);
     QList<Card*> selectedCards(int stackNum, int rowNum);
+    bool isSelectedCardsPositionable(bool isReleaseOnFreeStack);
 
+    void pickUpTheCards(QList<Card*>& selectedCards, int stackNum);
+    bool isSelectedCardsMoveable();
+    void updateCardsData(int stackNum);
     void addCardsToGroup(const QList<Card*>& selectedCards);
+    void removeCardsFromStack(const QList<Card*>& selectedCards, int stackNum);
 
+    void layDownTheCards(const QList<Card*>& selectedCards, int stackNum);
     void setCardsOnPositions(QList<Card*> selectedCards, int stackNum);
     void appendCardsToStack(const QList<Card*>& selectedCards, int stackNum);
-    void removeCardsFromStack(const QList<Card*>& selectedCards, int stackNum);
-    void updateCardsData(int stackNum);
 
-    void showCardsData(const QList<Card*>& cardList, const QString& text);
+    void collectCardsIfInOrder(int stackNum);
+    bool isCardsRemoveable(int stackNum);
+    void collectCards(int stackNum);
 
     bool isCardsInOrder(Card* firstCard, Card* secondCard);
     bool isSameColor(Card* firstCard, Card* secondCard);
 
-    void pickUpTheCards(QList<Card*>& selectedCards, int stackNum);
-    void layDownTheCards(const QList<Card*>& selectedCards, int stackNum);
-
-    void collectCardsIfInOrder(int stackNum);
-
-
-    bool isCardsRemoveable(int stackNum);
-
-    void collectCards(int stackNum);
-
-    void setupBoard();
+    void showCardsData(const QList<Card*>& cardList, const QString& text);
 };
 
 #endif // SOLITAIRE2_BOARD_H

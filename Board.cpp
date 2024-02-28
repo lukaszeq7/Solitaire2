@@ -1,8 +1,10 @@
+#include <random>
 #include "Board.h"
 
 Board::Board(QWidget *parent)
         : QGraphicsScene(parent),
-          _numberOfDecksOfCards(1),
+          _numberOfDecksOfCards(2),
+          _numberOfFullCardsPerColor(13),
           _sampleCard(new Card("h", 1)),
           _hSpace(120),
           _vSpace(40)
@@ -20,9 +22,14 @@ Board::~Board()
     qDeleteAll(_cards);
 }
 
+void Board::setupBoard()
+{
+    setSceneRect(_sampleCard->boundingRect());
+}
+
 void Board::initCards(int numberOfDecksOfCards)
 {
-    for(int i = 0; i < 13; i++)
+    for(int i = 0; i < _numberOfFullCardsPerColor; i++)
     {
         Card* freeStackCard = new Card("freeStack");
         addItem(freeStackCard);
@@ -31,7 +38,7 @@ void Board::initCards(int numberOfDecksOfCards)
 
     for (int i = 0; i < numberOfDecksOfCards; i++)
     {
-        for(int value = 1; value <= 13; value++)
+        for(int value = 1; value <= _numberOfFullCardsPerColor; value++)
         {
             Card* card1 = new Card("h", value);
             _cards.append(card1);
@@ -56,6 +63,8 @@ void Board::spreadCards()
 {
     int columnsCount = 13;
     int rowsCount = _numberOfDecksOfCards * 4;
+
+    shuffleCards();
 
     for(int col = 0; col < columnsCount; col++)
     {
@@ -88,21 +97,27 @@ void Board::spreadCards()
     }
 }
 
+void Board::shuffleCards()
+{
+    std::default_random_engine rng(std::random_device{}());
+    std::shuffle(_cards.begin(), _cards.end(), rng);
+}
+
 void Board::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if(event->button() == Qt::LeftButton)
     {
         QList<QGraphicsItem*> itemsAtPosition = items(event->scenePos());
-        QList<Card*> cardsUnderMouse = getCardsAtPosition(itemsAtPosition);
+        QList<Card*> cardsUnderMouse = cardsAtPosition(itemsAtPosition);
         if(!cardsUnderMouse.isEmpty())
         {
-            if(clickedCard(itemsAtPosition, 0)->color() == "freeStack")
+            if(cardsUnderMouse.first()->color() == "freeStack")
             {
                 return;
             }
 
-            _srcCardStackNum = clickedCard(itemsAtPosition, 0)->stackNum();
-            _srcCardRowNum = clickedCard(itemsAtPosition, 0)->rowNum();
+            _srcCardStackNum = cardsUnderMouse.first()->stackNum();
+            _srcCardRowNum = cardsUnderMouse.first()->rowNum();
             _selectedCards = selectedCards(_srcCardStackNum, _srcCardRowNum);
 
             pickUpTheCards(_selectedCards, _srcCardStackNum);
@@ -121,7 +136,7 @@ void Board::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
             destroyItemGroup(_cardGroup);
 
             QList<QGraphicsItem *> itemsAtPosition = items(event->scenePos());
-            QList<Card*> cardsUnderMouse = getCardsAtPosition(itemsAtPosition);
+            QList<Card*> cardsUnderMouse = cardsAtPosition(itemsAtPosition);
             _destCardStackNum = cardsUnderMouse.last()->stackNum();
             bool isReleasedOnFreeStack = false;
             if(cardsUnderMouse.count() == 2 && cardsUnderMouse.last()->color() == "freeStack")
@@ -152,7 +167,7 @@ void Board::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     QGraphicsScene::mouseReleaseEvent(event);
 }
 
-QList<Card *> Board::getCardsAtPosition(const QList<QGraphicsItem *>& itemsAtPosition)
+QList<Card *> Board::cardsAtPosition(const QList<QGraphicsItem *>& itemsAtPosition)
 {
     QList<Card*> cardsAtPosition;
     for(QGraphicsItem* item : itemsAtPosition)
@@ -166,18 +181,62 @@ QList<Card *> Board::getCardsAtPosition(const QList<QGraphicsItem *>& itemsAtPos
     return cardsAtPosition;
 }
 
-Card *Board::clickedCard(const QList<QGraphicsItem *>& itemsAtPosition, int cardIndex)
+QList<Card *> Board::selectedCards(int stackNum, int rowNum)
 {
-    QList<Card*> cardsAtPosition;
-    for(QGraphicsItem* item : itemsAtPosition)
+    QList<Card*> selectedCards;
+    QList<Card*> stackCards = _stacks[stackNum];
+    int stackSize = stackCards.count();
+    for (int i = rowNum; i < stackSize; i++)
     {
-        if(item->type() == _sampleCard->type())
-        {
-            Card* card = dynamic_cast<Card*>(item);
-            cardsAtPosition.append(card);
-        }
+        Card* card = stackCards[i];
+        card->setZValue(200 + i);
+        selectedCards.append(card);
     }
-    return cardsAtPosition[cardIndex];
+    return selectedCards;
+}
+
+bool Board::isSelectedCardsPositionable(bool isReleaseOnFreeStack)
+{
+    if(isReleaseOnFreeStack)
+    {
+        return true;
+    }
+
+    Card* lastStackCard = _stacks[_destCardStackNum].last();
+    Card* firstSelectedCard = _selectedCards.first();
+    if(isCardsInOrder(lastStackCard, firstSelectedCard) && isSameColor(lastStackCard, firstSelectedCard))
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+void Board::pickUpTheCards(QList<Card*>& selectedCards, int stackNum)
+{
+    if(!isSelectedCardsMoveable())
+    {
+        selectedCards.clear();
+        updateCardsData(stackNum);
+        return;
+    }
+    else
+    {
+        _cardGroup = new QGraphicsItemGroup();
+        addCardsToGroup(selectedCards);
+
+        removeCardsFromStack(selectedCards, stackNum);
+        updateCardsData(stackNum);
+    }
+}
+
+void Board::layDownTheCards(const QList<Card *> &selectedCards, int stackNum)
+{
+    setCardsOnPositions(selectedCards, stackNum);
+    appendCardsToStack(selectedCards, stackNum);
+    updateCardsData(stackNum);
 }
 
 bool Board::isSelectedCardsMoveable()
@@ -199,18 +258,16 @@ bool Board::isSelectedCardsMoveable()
     return true;
 }
 
-QList<Card *> Board::selectedCards(int stackNum, int rowNum)
+void Board::updateCardsData(int stackNum)
 {
-    QList<Card*> selectedCards;
-    QList<Card*> stackCards = _stacks[stackNum];
-    int stackSize = stackCards.count();
-    for (int i = rowNum; i < stackSize; i++)
+    int stackSize = _stacks[stackNum].count();
+    for (int i = 0; i < stackSize; i++)
     {
-        Card* card = stackCards[i];
-        card->setZValue(200 + i);
-        selectedCards.append(card);
+        Card* card = _stacks[stackNum][i];
+        card->setStackNum(stackNum);
+        card->setRowNum(i);
+        card->setZValue(i);
     }
-    return selectedCards;
 }
 
 void Board::addCardsToGroup(const QList<Card *>& selectedCards)
@@ -222,6 +279,14 @@ void Board::addCardsToGroup(const QList<Card *>& selectedCards)
     addItem(_cardGroup);
     _cardGroup->setFlag(QGraphicsItemGroup::ItemIsMovable);
     _cardGroup->setZValue(200);
+}
+
+void Board::removeCardsFromStack(const QList<Card*>& selectedCards, int stackNum)
+{
+    for (int i = 0; i < selectedCards.count(); i++)
+    {
+        _stacks[stackNum].removeLast();
+    }
 }
 
 void Board::setCardsOnPositions(QList<Card*> selectedCards, int stackNum)
@@ -250,94 +315,12 @@ void Board::setCardsOnPositions(QList<Card*> selectedCards, int stackNum)
     }
 }
 
-void Board::removeCardsFromStack(const QList<Card*>& selectedCards, int stackNum)
-{
-    for (int i = 0; i < selectedCards.count(); i++)
-    {
-        _stacks[stackNum].removeLast();
-    }
-}
-
-void Board::updateCardsData(int stackNum)
-{
-    int stackSize = _stacks[stackNum].count();
-    for (int i = 0; i < stackSize; i++)
-    {
-        Card* card = _stacks[stackNum][i];
-        card->setStackNum(stackNum);
-        card->setRowNum(i);
-        card->setZValue(i);
-    }
-}
-
 void Board::appendCardsToStack(const QList<Card*>& selectedCards, int stackNum)
 {
     for (int i = 0; i < selectedCards.count(); i++)
     {
         _stacks[stackNum].append(_selectedCards[i]);
     }
-}
-
-void Board::showCardsData(const QList<Card *>& cardList, const QString& text)
-{
-    for(Card* card : cardList)
-    {
-        qDebug() << text << card->color() << card->value() << "stack:" << card->stackNum() << "row:" << card->rowNum() << "z:" << card->zValue();
-    }
-}
-
-bool Board::isSelectedCardsPositionable(bool isReleaseOnFreeStack)
-{
-    if(isReleaseOnFreeStack)
-    {
-        return true;
-    }
-
-    Card* lastStackCard = _stacks[_destCardStackNum].last();
-    Card* firstSelectedCard = _selectedCards.first();
-    if(isCardsInOrder(lastStackCard, firstSelectedCard) && isSameColor(lastStackCard, firstSelectedCard))
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-bool Board::isCardsInOrder(Card *firstCard, Card *secondCard)
-{
-    return firstCard->value() == secondCard->value() + 1;
-}
-
-bool Board::isSameColor(Card *firstCard, Card *secondCard)
-{
-    return firstCard->color() == secondCard->color();
-}
-
-void Board::pickUpTheCards(QList<Card*>& selectedCards, int stackNum)
-{
-    if(!isSelectedCardsMoveable())
-    {
-        selectedCards.clear();
-        updateCardsData(stackNum);
-        return;
-    }
-    else
-    {
-        _cardGroup = new QGraphicsItemGroup();
-        addCardsToGroup(selectedCards);
-
-        removeCardsFromStack(selectedCards, stackNum);
-        updateCardsData(stackNum);
-    }
-}
-
-void Board::layDownTheCards(const QList<Card *> &selectedCards, int stackNum)
-{
-    setCardsOnPositions(selectedCards, stackNum);
-    appendCardsToStack(selectedCards, stackNum);
-    updateCardsData(stackNum);
 }
 
 void Board::collectCardsIfInOrder(int stackNum)
@@ -351,7 +334,7 @@ void Board::collectCardsIfInOrder(int stackNum)
 bool Board::isCardsRemoveable(int stackNum)
 {
     int stackSize = _stacks[stackNum].count();
-    if(_stacks[stackNum].last()->value() != 1 || stackSize < 13)
+    if(_stacks[stackNum].last()->value() != 1 || stackSize < _numberOfFullCardsPerColor)
     {
         return false;
     }
@@ -359,11 +342,11 @@ bool Board::isCardsRemoveable(int stackNum)
     int orderCounter = 1;
     Card* previousCard = _stacks[stackNum].last();
 
-    while(orderCounter < 13)
+    while(orderCounter < _numberOfFullCardsPerColor)
     {
         int i = stackSize - orderCounter - 1;
         Card* card = _stacks[stackNum][i];
-        if(isCardsInOrder(card, previousCard))
+        if(isCardsInOrder(card, previousCard) && isSameColor(card, previousCard))
         {
             previousCard = card;
             orderCounter++;
@@ -380,7 +363,7 @@ void Board::collectCards(int stackNum)
 {
     int row = _stacks[stackNum].count() - 1;
     int i = 0;
-    while(i < 13)
+    while(i < _numberOfFullCardsPerColor)
     {
         _stacks[stackNum][row]->hide();
         _stacks[stackNum].removeAt(row);
@@ -391,9 +374,20 @@ void Board::collectCards(int stackNum)
     updateCardsData(stackNum);
 }
 
-void Board::setupBoard()
+bool Board::isCardsInOrder(Card *firstCard, Card *secondCard)
 {
-    setSceneRect(_sampleCard->boundingRect());
+    return firstCard->value() == secondCard->value() + 1;
 }
 
+bool Board::isSameColor(Card *firstCard, Card *secondCard)
+{
+    return firstCard->color() == secondCard->color();
+}
 
+void Board::showCardsData(const QList<Card *>& cardList, const QString& text)
+{
+    for(Card* card : cardList)
+    {
+        qDebug() << text << card->color() << card->value() << "stack:" << card->stackNum() << "row:" << card->rowNum() << "z:" << card->zValue();
+    }
+}
