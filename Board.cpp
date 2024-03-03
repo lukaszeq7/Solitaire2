@@ -3,9 +3,11 @@
 
 Board::Board(QWidget *parent)
         : QGraphicsScene(parent),
-          _numberOfDecksOfCards(2),
+          _numberOfDecksOfCards(1),
           _numberOfFullCardsPerColor(13),
           _sampleCard(new Card("h", 1)),
+          _xPosStack(-700),
+          _yPosStack(-400),
           _hSpace(120),
           _vSpace(40)
 {
@@ -72,7 +74,7 @@ void Board::spreadCards()
         freeStackCard->setStackNum(col);
         freeStackCard->setRowNum(0);
         freeStackCard->setZValue(-1);
-        freeStackCard->setPos(-700 + col * _hSpace, -100);
+        freeStackCard->setPos(_xPosStack + col * _hSpace, _yPosStack);
     }
 
     int cardIndex = 0;
@@ -87,7 +89,7 @@ void Board::spreadCards()
                 card->setStackNum(col);
                 card->setRowNum(row);
                 card->setZValue(row);
-                card->setPos(-700 + col * _hSpace, -100 + row * _vSpace);
+                card->setPos(_xPosStack + col * _hSpace, _yPosStack + row * _vSpace);
 
                 stack.append(card);
                 cardIndex++;
@@ -293,11 +295,13 @@ void Board::setCardsOnPositions(QList<Card*> selectedCards, int stackNum)
 {
     if(_stacks[stackNum].isEmpty())
     {
+        qDebug() << "1";
+
         for (int i = 0; i < selectedCards.count(); i++)
         {
             Card *card = selectedCards[i];
-            card->setX(-700 + stackNum * _hSpace);
-            card->setY(-100 + i * _vSpace);
+            card->setX(_xPosStack + stackNum * _hSpace);
+            card->setY(_yPosStack + i * _vSpace);
             card->setZValue(i);
         }
     }

@@ -31,6 +31,9 @@ private:
 
     int _hSpace;
     int _vSpace;
+    int _xPosStack;
+    int _yPosStack;
+
     int _srcCardStackNum;
     int _srcCardRowNum;
     int _destCardStackNum;
