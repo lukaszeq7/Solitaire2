@@ -3,13 +3,13 @@
 
 Board::Board(QWidget *parent)
         : QGraphicsScene(parent),
-          _numberOfDecksOfCards(1),
+          _numberOfDecksOfCards(2),
           _numberOfFullCardsPerColor(13),
           _sampleCard(new Card("h", 1)),
-          _xPosStack(-700),
-          _yPosStack(-400),
-          _hSpace(120),
-          _vSpace(40)
+          _xPosStack(0),
+          _yPosStack(0),
+          _hSpace(110),
+          _vSpace(30)
 {
     setupBoard();
 
@@ -26,7 +26,7 @@ Board::~Board()
 
 void Board::setupBoard()
 {
-    setSceneRect(_sampleCard->boundingRect());
+    setBackgroundBrush(Qt::darkGreen);
 }
 
 void Board::initCards(int numberOfDecksOfCards)
@@ -295,8 +295,6 @@ void Board::setCardsOnPositions(QList<Card*> selectedCards, int stackNum)
 {
     if(_stacks[stackNum].isEmpty())
     {
-        qDebug() << "1";
-
         for (int i = 0; i < selectedCards.count(); i++)
         {
             Card *card = selectedCards[i];

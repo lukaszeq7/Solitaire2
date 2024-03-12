@@ -18,6 +18,9 @@ public:
 private:
     Board* _board;
     QGraphicsView* _view;
+
+    qreal _sceneWidth;
+    qreal _sceneHeight;
 };
 
 #endif //SOLITAIRE2_MAINWINDOW_H
